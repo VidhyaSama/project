@@ -1,0 +1,54 @@
+version: "3.9"
+
+services: 
+  currency-exchange:
+    image:  n9064/ms-currency-exchange-service:0.0.1-SNAPSHOT
+    container_name: currency-exchange
+    ports: 
+       - "8000:8000"
+    depends_on:
+      - naming-server
+    networks:
+      - currency-network
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE= http://naming-server:8761/eureka
+     
+
+  currency-conversion:
+    image:  n9064/msa-currency-conversion-service:0.0.1-SNAPSHOT
+    container_name: currency-conversion 
+    ports: 
+       - "8100:8100"
+    depends_on:
+      - naming-server
+    networks:
+      - currency-network
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE= http://naming-server:8761/eureka 
+      - HOST=currency-exchange
+      - PORT=8000
+
+  api-gateway:
+    image:  n9064/msa-netflix-apigateway:0.0.1-SNAPSHOT
+    container_name: api-gateway
+    ports: 
+       - "8765:8765"
+    depends_on:
+      - naming-server
+    networks:
+      - currency-network
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE= http://naming-server:8761/eureka 
+      
+
+  naming-server:
+   image: n9064/msa-netflix-eureka-naming-server:0.0.1-SNAPSHOT
+   container_name: naming-server
+   ports:
+      - "8761:8761"
+   networks:
+      - currency-network 
+  
+networks:
+  currency-network:
+    driver: bridge

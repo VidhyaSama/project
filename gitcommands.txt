@@ -1,0 +1,10 @@
+git pull origin develop
+git flow feature start chatbot-health
+git status
+git add
+git commit -m ''
+git push origin feature/chatbot-health
+ git checkout develop
+git merge feature/chatbot-health
+ git flow feature finish chatbot-health
+git push origin develop

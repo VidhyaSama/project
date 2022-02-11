@@ -1,0 +1,1 @@
+insert into employee_details(101,'1998-01-12','software','svidhya@gmail.com','vidhya','9087654321')
